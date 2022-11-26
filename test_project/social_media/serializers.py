@@ -48,3 +48,9 @@ class PostCommentSerializer(serializers.ModelSerializer):
 
         return instance
 
+class UserPostCommentsListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PostComment
+        fields = ['id','post', 'user', 'comment_body', 'comment_reply', 'created_at', 'updated_at']
+        # lookup_field = 'comment_id'

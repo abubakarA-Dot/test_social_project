@@ -8,7 +8,7 @@ from . import views
 router = DefaultRouter()
 
 router.register('user-post-list', views.UserPostListAPI, basename='userPostList')
-# router.register('user-post-list/pk/post_id', views.UserPostListAPI, basename='userPostDetail')
+# router.register('post_comments/', views.UserPostCommentsListAPI, basename='UserPostCommentsListAPI')
 router.register('create-post', views.UserPostAPI, basename='createPost')
 
 
@@ -26,5 +26,8 @@ urlpatterns = [
     #MVT url
     path('post/detail/<str:id>/', views.getPost, name='getPost'),
 
+    #API
     path('comment/<str:pk>/', views.userPostCommentAPI),
+    #API
+    # path('post-comment/<str:pk>/', views.userPostCommentsApi),
 ]

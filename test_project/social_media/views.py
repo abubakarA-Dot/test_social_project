@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from rest_framework import status
 from .serializers import (
     UserPostSerializer, UserPostListSerializer, \
-        UserPostDetailSerializer, PostCommentSerializer 
+        UserPostDetailSerializer, PostCommentSerializer , UserPostCommentsListSerializer
     )
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -70,14 +70,18 @@ def userPostDetailAPI(request, pk):
     Retrieve a post instance.
     """
     try:
-        post_obj = Post.objects.get(pk=pk)
-        serializer = UserPostDetailSerializer(post_obj, many=False, context = {'request':request})
+        post_obj = Post.objects.get(id=pk)
+        post_comments = PostComment.objects.filter(post= post_obj)
+        # for comment in post_comments:
+        # serializer = UserPostDetailSerializer(post_obj, many=False, context = {'request':request})
+        serializer = UserPostCommentsListSerializer(post_comments,many=True, context = {'request':request})
         return Response(serializer.data)
     except Post.DoesNotExist:
         raise Http404
 
 def getPost(request, id):
     response = requests.get(f'http://localhost:8000/post-detail/{id}/')
+    
     post_detail = response.json()
     context = {
         'post_detail': post_detail,
@@ -98,5 +102,21 @@ def userPostCommentAPI(request, pk):
         return Response(serializer.data)
     except Post.DoesNotExist:
         raise Http404
+# @api_view(['GET'])
+# def userPostCommentsApi(request, pk):
+#     try:
+#         post_obj = Post.objects.get(pk = pk)
+#         post_comments = PostComment.objects.filter(post= post_obj)
+#         serializer = UserPostCommentsListSerializer(post_comments,many=True, context = {'request':request})
+#         return Response(serializer.data)
+#     except Post.DoesNotExist:
+#         raise Http404
 
 
+# class UserPostCommentsListAPI(viewsets.ModelViewSet):    
+        
+#         def comments(self, request,id):
+#             post_obj = Post.objects.get(id = id)
+#             post_comments = PostComment.objects.filter(post= post_obj)
+#             serializer_class = UserPostCommentsListSerializer(post_comments,many=False, context = {'request':request})
+#             lookup_field = 'comment_id'
