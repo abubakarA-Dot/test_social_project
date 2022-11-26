@@ -1,0 +1,1828 @@
+<h1>User Posts</h1> <br>
+{% for post in posts %}
+<strong>Post Title</strong> <a href="/post/detail/{{post.id}}">{{post.post_title}}</a> <br>
+<br><strong>Comment</strong> {{post.post_body}} <br>
+<br><strong>Created at</strong> {{post.created_at}} <br>
+<hr>
+
+{% endfor %}
+
+
+
+
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- bootstrap 4.3.1 -->
+  <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+  <!-- styles -->
+  <link rel="stylesheet" href="{% static 'styles.min.css' %}">
+  <!-- simplebar styles -->
+  <link rel="stylesheet" href="{% static 'simplebar.css' %}">
+  <!-- tiny-slider styles -->
+  <link rel="stylesheet" href="{% static 'tiny-slider.css' %}">
+  <!-- favicon -->
+  <link rel="icon" href="{% static 'img/favicon.ico' %}">
+  <title>Social | Posts</title>
+
+
+  <style>
+    [data-simplebar] {
+    position: relative;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+}
+
+.simplebar-wrapper {
+    overflow: hidden;
+    width: inherit;
+    height: inherit;
+    max-width: inherit;
+    max-height: inherit;
+}
+
+.simplebar-mask {
+    direction: inherit;
+    position: absolute;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: auto !important;
+    height: auto !important;
+    z-index: 0;
+}
+
+.simplebar-offset {
+    direction: inherit !important;
+    box-sizing: inherit !important;
+    resize: none !important;
+    position: absolute;
+    top: -28px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    -webkit-overflow-scrolling: touch;
+}
+
+.simplebar-content-wrapper {
+    direction: inherit;
+    box-sizing: border-box !important;
+    position: relative;
+    display: block;
+    height: 100%;
+    /* Required for horizontal native scrollbar to not appear if parent is taller than natural height */
+    width: auto;
+    /* visibility: visible; */
+    max-width: 100%;
+    /* Not required for horizontal scroll to trigger */
+    max-height: 100%;
+    /* Needed for vertical scroll to trigger */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.simplebar-content-wrapper::-webkit-scrollbar,
+.simplebar-hide-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.simplebar-content:before,
+.simplebar-content:after {
+    content: ' ';
+    display: table;
+}
+
+.simplebar-placeholder {
+    max-height: 100%;
+    max-width: 100%;
+    width: 100%;
+    pointer-events: none;
+}
+
+.simplebar-height-auto-observer-wrapper {
+    box-sizing: inherit !important;
+    height: 100%;
+    width: 100%;
+    max-width: 1px;
+    position: relative;
+    float: left;
+    max-height: 1px;
+    overflow: hidden;
+    z-index: -1;
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
+    flex-grow: inherit;
+    flex-shrink: 0;
+    flex-basis: 0;
+}
+
+.simplebar-height-auto-observer {
+    box-sizing: inherit;
+    display: block;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 1000%;
+    width: 1000%;
+    min-height: 1px;
+    min-width: 1px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.simplebar-track {
+    z-index: 1;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+[data-simplebar].simplebar-dragging .simplebar-content {
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+[data-simplebar].simplebar-dragging .simplebar-track {
+    pointer-events: all;
+}
+
+.simplebar-scrollbar {
+    position: absolute;
+    right: 2px;
+    width: 4px;
+    min-height: 10px;
+}
+
+.simplebar-scrollbar:before {
+    position: absolute;
+    content: '';
+    background: #adafca;
+    border-radius: 7px;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    transition: opacity 0.2s linear;
+}
+
+.simplebar-scrollbar.simplebar-visible:before {
+    /* When hovered, remove all transitions from drag handle */
+    opacity: .4;
+    transition: opacity 0s linear;
+}
+
+.simplebar-track.simplebar-vertical {
+    top: 0;
+    width: 11px;
+}
+
+.simplebar-track.simplebar-vertical .simplebar-scrollbar:before {
+    top: 2px;
+    bottom: 2px;
+}
+
+.simplebar-track.simplebar-horizontal {
+    left: 0;
+    height: 11px;
+}
+
+.simplebar-track.simplebar-horizontal .simplebar-scrollbar:before {
+    height: 100%;
+    left: 2px;
+    right: 2px;
+}
+
+.simplebar-track.simplebar-horizontal .simplebar-scrollbar {
+    right: auto;
+    left: 0;
+    top: 2px;
+    height: 7px;
+    min-height: 0;
+    min-width: 10px;
+    width: auto;
+}
+
+/* Rtl support */
+[data-simplebar-direction='rtl'] .simplebar-track.simplebar-vertical {
+    right: auto;
+    left: 0;
+}
+
+.hs-dummy-scrollbar-size {
+    direction: rtl;
+    position: fixed;
+    opacity: 0;
+    visibility: hidden;
+    height: 500px;
+    width: 500px;
+    overflow-y: hidden;
+    overflow-x: scroll;
+}
+
+.simplebar-hide-scrollbar {
+    position: fixed;
+    left: 0;
+    visibility: hidden;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+/*--------------------
+    CUSTOM STYLES 
+--------------------*/
+[data-simplebar].navigation-widget {
+    position: fixed;
+}
+
+[data-simplebar].navigation-widget .simplebar-scrollbar {
+    right: 4px;
+}
+
+/* for cover photo in user profile section */
+.cover_image {
+    margin-top: 80px;
+    width: 100%;
+    height: 50%;
+}
+
+.back_color {
+    background-color: rgb(4, 13, 21);
+    /* height: 100px; */
+}
+
+.flex_follow {
+    /* float: right; */
+    margin-top: -420px;
+    margin-right: 20px;
+
+}
+
+.cover_img {
+    z-index: 0;
+}
+
+.follow_buttons {
+    z-index: 1;
+    color: aliceblue;
+}
+
+.follow_buttons a {
+    z-index: 1;
+    color: aliceblue;
+}
+
+.follow_buttons a:hover {
+    color: yellow;
+}
+
+.profile_image {
+    float: left;
+}
+
+.side_bar {}
+
+.user_left_side_bar {
+    float: left;
+}
+
+.user_side_bar {
+    float: right;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 700px;
+
+}
+
+.suggested_users {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 900px;
+}
+
+.profile_data {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+}
+
+.image {
+    /* float: left; */
+    margin-right: 400px;
+}
+
+.name_clr {
+    color: aliceblue;
+    /* float: left; */
+    margin-left: -370px;
+
+}
+
+.users_suggestions_child {
+    /* it is only for large screens. it is not mobile responsive */
+    /* margin-top: -1470px;  */
+    margin-top: -1929px;
+    position: sticky;
+}
+
+/* post detail page css */
+/* post width */
+.post_width {
+    width: 450px;
+}
+
+.com_but_row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.comment_button {
+    width: 100px;
+    height: 100%;
+    background-color: #615dfa;
+    color: aliceblue;
+}
+
+/* comment box with js */
+
+.heading {
+    color: #666666;
+    text-align: center;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: #404040;
+    background-color: #eee;
+}
+
+.container {
+    width: 450px;
+    margin-top: 20px;
+}
+
+.button-group {
+    margin-bottom: 20px;
+}
+
+.counter {
+    display: inline;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-right: 10px;
+}
+
+.posts {
+    clear: both;
+    list-style: none;
+    padding-left: 0;
+    width: 100%;
+    text-align: left;
+}
+
+.posts li {
+    background-color: #fff;
+    border: 1.5px solid #d8d8d8;
+    border-radius: 10px;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    min-height: 42px;
+    box-shadow: 8px 8px 5px #888888;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+
+
+/* list of comments */
+
+.avatar {
+    position: relative;
+    display: inline-block;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.25rem;
+}
+
+.avatar-img,
+.avatar-initials,
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+}
+
+.avatar-img {
+    display: block;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+.avatar-initials {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    color: #fff;
+    line-height: 0;
+    background-color: #a0aec0;
+}
+
+.avatar-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #a0aec0 url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='%23fff' d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z'/%3e%3c/svg%3e") no-repeat center/1.75rem;
+}
+
+.avatar-indicator {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 20%;
+    height: 20%;
+    display: block;
+    background-color: #a0aec0;
+    border-radius: 50%;
+}
+
+.avatar-group {
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+}
+
+.avatar-group .avatar+.avatar {
+    margin-left: -0.75rem;
+}
+
+.avatar-group .avatar:hover {
+    z-index: 1;
+}
+
+.avatar-sm,
+.avatar-group-sm>.avatar {
+    width: 2.125rem;
+    height: 2.125rem;
+    font-size: 1rem;
+}
+
+.avatar-sm .avatar-placeholder,
+.avatar-group-sm>.avatar .avatar-placeholder {
+    background-size: 1.25rem;
+}
+
+.avatar-group-sm>.avatar+.avatar {
+    margin-left: -0.53125rem;
+}
+
+.avatar-lg,
+.avatar-group-lg>.avatar {
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.5rem;
+}
+
+.avatar-lg .avatar-placeholder,
+.avatar-group-lg>.avatar .avatar-placeholder {
+    background-size: 2.25rem;
+}
+
+.avatar-group-lg>.avatar+.avatar {
+    margin-left: -1rem;
+}
+
+.avatar-light .avatar-indicator {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.75);
+}
+
+.avatar-group-light>.avatar {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.75);
+}
+
+.avatar-dark .avatar-indicator {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25);
+}
+
+.avatar-group-dark>.avatar {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25);
+}
+
+/* Font not working in <textarea> for this version of bs */
+
+textarea {
+    font-family: inherit;
+}
+  </style>
+
+  <style>
+    .tns-outer {
+    padding: 0 !important
+}
+
+.tns-outer [hidden] {
+    display: none !important
+}
+
+.tns-outer [aria-controls],
+.tns-outer [data-action] {
+    cursor: pointer
+}
+
+.tns-slider {
+    -webkit-transition: all 0s;
+    -moz-transition: all 0s;
+    transition: all 0s
+}
+
+.tns-slider>.tns-item {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+.tns-horizontal.tns-subpixel {
+    white-space: nowrap
+}
+
+.tns-horizontal.tns-subpixel>.tns-item {
+    display: inline-block;
+    vertical-align: top;
+    white-space: normal
+}
+
+.tns-horizontal.tns-no-subpixel:after {
+    content: '';
+    display: table;
+    clear: both
+}
+
+.tns-horizontal.tns-no-subpixel>.tns-item {
+    float: left
+}
+
+.tns-horizontal.tns-carousel.tns-no-subpixel>.tns-item {
+    margin-right: -100%
+}
+
+.tns-no-calc {
+    position: relative;
+    left: 0
+}
+
+.tns-gallery {
+    position: relative;
+    left: 0;
+    min-height: 1px
+}
+
+.tns-gallery>.tns-item {
+    position: absolute;
+    left: -100%;
+    -webkit-transition: transform 0s, opacity 0s;
+    -moz-transition: transform 0s, opacity 0s;
+    transition: transform 0s, opacity 0s
+}
+
+.tns-gallery>.tns-slide-active {
+    position: relative;
+    left: auto !important
+}
+
+.tns-gallery>.tns-moving {
+    -webkit-transition: all 0.25s;
+    -moz-transition: all 0.25s;
+    transition: all 0.25s
+}
+
+.tns-autowidth {
+    display: inline-block
+}
+
+.tns-lazy-img {
+    -webkit-transition: opacity 0.6s;
+    -moz-transition: opacity 0.6s;
+    transition: opacity 0.6s;
+    opacity: 0.6
+}
+
+.tns-lazy-img.tns-complete {
+    opacity: 1
+}
+
+.tns-ah {
+    -webkit-transition: height 0s;
+    -moz-transition: height 0s;
+    transition: height 0s
+}
+
+.tns-ovh {
+    overflow: hidden
+}
+
+.tns-visually-hidden {
+    position: absolute;
+    left: -10000em
+}
+
+.tns-transparent {
+    opacity: 0;
+    visibility: hidden
+}
+
+.tns-fadeIn {
+    opacity: 1;
+    filter: alpha(opacity=100);
+    z-index: 0
+}
+
+.tns-normal,
+.tns-fadeOut {
+    opacity: 0;
+    filter: alpha(opacity=0);
+    z-index: -1
+}
+
+.tns-vpfix {
+    white-space: nowrap
+}
+
+.tns-vpfix>div,
+.tns-vpfix>li {
+    display: inline-block
+}
+
+.tns-t-subp2 {
+    margin: 0 auto;
+    width: 310px;
+    position: relative;
+    height: 10px;
+    overflow: hidden
+}
+
+.tns-t-ct {
+    width: 2333.3333333%;
+    width: -webkit-calc(100% * 70 / 3);
+    width: -moz-calc(100% * 70 / 3);
+    width: calc(100% * 70 / 3);
+    position: absolute;
+    right: 0
+}
+
+.tns-t-ct:after {
+    content: '';
+    display: table;
+    clear: both
+}
+
+.tns-t-ct>div {
+    width: 1.4285714%;
+    width: -webkit-calc(100% / 70);
+    width: -moz-calc(100% / 70);
+    width: calc(100% / 70);
+    height: 10px;
+    float: left
+}
+
+/*# sourceMappingURL=sourcemaps/tiny-slider.css.map */
+  </style>
+</head>
+<body>
+
+ 
+
+ 
+
+ 
+
+   <!-- HEADER -->
+   <header class="header">
+    <!-- HEADER ACTIONS -->
+    <div class="header-actions">
+      <!-- HEADER BRAND -->
+      <div class="header-brand">
+        <!-- LOGO -->
+        <div class="logo">
+          <!-- ICON LOGO VIKINGER -->
+          <svg class="icon-logo-vikinger small">
+            <use xlink:href="#svg-logo-vikinger"></use>
+          </svg>
+          <!-- /ICON LOGO VIKINGER -->
+        </div>
+        <!-- /LOGO -->
+
+        <!-- HEADER BRAND TEXT -->
+        <h1 class="header-brand-text">Gainvest</h1>
+        <!-- /HEADER BRAND TEXT -->
+      </div>
+      <!-- /HEADER BRAND -->
+    </div>
+    <!-- /HEADER ACTIONS -->
+
+    <!-- HEADER ACTIONS -->
+    <div class="header-actions">
+      
+      </div>
+      <!-- /MOBILEMENU TRIGGER -->
+
+
+      <!-- dont delete this section below-->
+      <!-- NAVIGATION -->
+      <nav class="navigation">
+        <!-- MENU MAIN -->
+        <ul class="menu-main">
+          <!-- MENU MAIN ITEM -->
+          <li class="menu-main-item">
+            <!-- MENU MAIN ITEM LINK -->
+            <a class="menu-main-item-link" href="">Home</a>
+            <!-- /MENU MAIN ITEM LINK -->
+          </li>
+          <!-- /MENU MAIN ITEM -->
+            <!-- MENU MAIN ITEM -->
+            <li class="menu-main-item">
+              <!-- MENU MAIN ITEM LINK -->
+              <a class="menu-main-item-link" href="">Profile</a>
+              <!-- /MENU MAIN ITEM LINK -->
+            </li>
+            <!-- /MENU MAIN ITEM -->
+          
+          <!-- MENU MAIN ITEM -->
+          <li class="menu-main-item">
+            <!-- MENU MAIN ITEM LINK -->
+            <a class="menu-main-item-link" href="">Data Hub</a>
+            <!-- /MENU MAIN ITEM LINK -->
+          </li>
+          <!-- /MENU MAIN ITEM -->
+
+
+
+          <!-- MENU MAIN ITEM -->
+          <li class="menu-main-item">
+            <!-- MENU MAIN ITEM LINK -->
+            <a class="menu-main-item-link" href="">Inbox</a>
+            <!-- /MENU MAIN ITEM LINK -->
+          </li>
+          <!-- /MENU MAIN ITEM -->
+
+          <!-- MENU MAIN ITEM -->
+          <li class="menu-main-item">
+            <!-- MENU MAIN ITEM LINK -->
+            <a class="menu-main-item-link" href="">Opportunities</a>
+            <!-- /MENU MAIN ITEM LINK -->
+          </li>
+          <!-- /MENU MAIN ITEM -->
+
+           <!-- MENU MAIN ITEM -->
+           <li class="menu-main-item">
+            <!-- MENU MAIN ITEM LINK -->
+            <a class="menu-main-item-link" href="">Services</a>
+            <!-- /MENU MAIN ITEM LINK -->
+          </li>
+          <!-- /MENU MAIN ITEM -->
+
+    <!-- dont delete section above this -->
+
+        
+           
+              </li>
+              <!-- /MENU MAIN ITEM -->
+            </ul>
+            <!-- /MENU MAIN -->
+          </li>
+          <!-- /MENU MAIN ITEM -->
+        </ul>
+        <!-- /MENU MAIN -->
+      </nav>
+      <!-- /NAVIGATION -->
+    </div>
+    <!-- /HEADER ACTIONS -->
+
+    <!-- HEADER ACTIONS -->
+    <div class="header-actions search-bar">
+
+          <!-- DROPDOWN NAVIGATION BUTTON -->
+          <p class="dropdown-navigation-button button small secondary">Logout</p>
+
+        
+          <!-- /DROPDOWN NAVIGATION BUTTON -->
+        </div>
+        <!-- /DROPDOWN NAVIGATION -->
+      </div>
+      <!-- /ACTION ITEM WRAP -->
+    </div>
+    <!-- /HEADER ACTIONS -->
+  </header>
+  <!-- /HEADER -->
+
+  <!-- maybe delete/change above -->
+
+
+  <!-- CONTENT GRID -->
+  <div class="content-grid">
+
+    <!-- don't delete the section below-->
+
+    <!-- SECTION BANNER -->
+    <div class="section-banner">
+      <!-- SECTION BANNER ICON -->
+      <img class="section-banner-icon" src="{% static 'img/banner/newsfeed-icon.png' %}" alt="newsfeed-icon">
+      <!-- /SECTION BANNER ICON -->
+  
+      <!-- SECTION BANNER TITLE -->
+      <p class="section-banner-title">Newsfeed</p>
+      <!-- /SECTION BANNER TITLE -->
+  
+      <!-- SECTION BANNER TEXT -->
+      <p class="section-banner-text">Check what your friends have been up to!</p>
+      <!-- /SECTION BANNER TEXT -->
+    </div>
+    <!-- /SECTION BANNER -->
+<!-- don't delete the section above-->
+
+    <!-- GRID -->
+    <div class="grid grid-3-6-3 mobile-prefer-content">
+      
+
+      <!-- don't delete section below-->
+      <!-- GRID COLUMN -->
+      <div class="grid-column">
+        <!-- QUICK POST -->
+        <div class="quick-post">
+          <!-- QUICK POST HEADER -->
+          <div class="quick-post-header">
+            <!-- OPTION ITEMS -->
+            <div class="option-items">
+              <!-- OPTION ITEM -->
+              <div class="option-item active">
+                <!-- OPTION ITEM ICON -->
+                <svg class="option-item-icon icon-status">
+                  <use xlink:href="#svg-status"></use>
+                </svg>
+                <!-- /OPTION ITEM ICON -->
+      
+                <!-- OPTION ITEM TITLE -->
+                <p class="option-item-title">Status</p>
+                <!-- /OPTION ITEM TITLE -->
+              </div>
+              <!-- /OPTION ITEM -->
+      
+              <!-- OPTION ITEM -->
+              <div class="option-item">
+                <!-- OPTION ITEM ICON -->
+                <svg class="option-item-icon icon-blog-posts">
+                  <use xlink:href="#svg-blog-posts"></use>
+                </svg>
+                <!-- /OPTION ITEM ICON -->
+      
+                <!-- OPTION ITEM TITLE -->
+                <p class="option-item-title">Blog Post</p>
+                <!-- /OPTION ITEM TITLE -->
+              </div>
+              <!-- /OPTION ITEM -->
+      
+              <!-- OPTION ITEM -->
+              <div class="option-item">
+                <!-- OPTION ITEM ICON -->
+                <svg class="option-item-icon icon-poll">
+                  <use xlink:href="#svg-poll"></use>
+                </svg>
+                <!-- /OPTION ITEM ICON -->
+      
+                <!-- OPTION ITEM TITLE -->
+                <p class="option-item-title">Poll</p>
+                <!-- /OPTION ITEM TITLE -->
+              </div>
+              <!-- /OPTION ITEM -->
+            </div>
+            <!-- /OPTION ITEMS -->
+          </div>
+          <!-- /QUICK POST HEADER -->
+      
+          <!-- QUICK POST BODY -->
+          <div class="quick-post-body">
+            <!-- FORM -->
+            <form class="form" action="" method="post">
+              {% csrf_token %}
+              <!-- FORM ROW -->
+              <div class="form-row">
+                <!-- FORM ITEM -->
+                <div class="form-item">
+                  <!-- FORM TEXTAREA -->
+                  <div class="form-textarea">
+                    <textarea id="quick-post-text" name="user_post_body" ></textarea>
+                    <!-- FORM TEXTAREA LIMIT TEXT -->
+                    <p class="form-textarea-limit-text">998/1000</p>
+                    <!-- /FORM TEXTAREA LIMIT TEXT -->
+                  </div>
+                  <!-- /FORM TEXTAREA -->
+                </div>
+                <!-- /FORM ITEM -->
+              </div>
+              <!-- /FORM ROW -->
+            
+            <!-- /FORM -->
+          </div>
+          <!-- /QUICK POST BODY -->
+      
+          <!-- QUICK POST FOOTER -->
+          <div class="quick-post-footer">
+            <!-- QUICK POST FOOTER ACTIONS -->
+            <div class="quick-post-footer-actions">
+              <!-- QUICK POST FOOTER ACTION -->
+              <div class="quick-post-footer-action text-tooltip-tft-medium" data-title="Insert Photo">
+                <!-- QUICK POST FOOTER ACTION ICON -->
+                <svg class="quick-post-footer-action-icon icon-camera">
+                  <use xlink:href="#svg-camera"></use>
+                </svg>
+                <!-- /QUICK POST FOOTER ACTION ICON -->
+              </div>
+              <!-- /QUICK POST FOOTER ACTION -->
+      
+              <!-- QUICK POST FOOTER ACTION -->
+              <div class="quick-post-footer-action text-tooltip-tft-medium" data-title="Insert GIF">
+                <!-- QUICK POST FOOTER ACTION ICON -->
+                <svg class="quick-post-footer-action-icon icon-gif">
+                  <use xlink:href="#svg-gif"></use>
+                </svg>
+                <!-- /QUICK POST FOOTER ACTION ICON -->
+              </div>
+              <!-- /QUICK POST FOOTER ACTION -->
+      
+              <!-- QUICK POST FOOTER ACTION -->
+              <div class="quick-post-footer-action text-tooltip-tft-medium" data-title="Insert Tag">
+                <!-- QUICK POST FOOTER ACTION ICON -->
+                <svg class="quick-post-footer-action-icon icon-tags">
+                  <use xlink:href="#svg-tags"></use>
+                </svg>
+                <!-- /QUICK POST FOOTER ACTION ICON -->
+              </div>
+              <!-- /QUICK POST FOOTER ACTION -->
+            </div>
+            <!-- /QUICK POST FOOTER ACTIONS -->
+      
+              <!-- QUICK POST FOOTER ACTIONS -->
+              <div class="quick-post-footer-actions">
+                <!-- BUTTON -->
+                <p class="button small void">Discard</p>
+                <!-- /BUTTON -->
+      
+                <!-- BUTTON -->
+                <input type="submit" value="Post" >
+                <!-- /BUTTON -->
+              </div>
+              <!-- /QUICK POST FOOTER ACTIONS -->
+          </div>
+          <!-- /QUICK POST FOOTER -->
+        </form>
+        </div>
+
+        <!-- /QUICK POST -->
+        <div class="row suggested_users">
+        <!-- starting of div for suggested users -->
+        <div class="col users_suggestions_child">
+        <!-- suggested users -->
+        <!-- WIDGET BOX -->
+        <div class="widget-box">
+          <!-- WIDGET BOX SETTINGS -->
+          <div class="widget-box-settings">
+            <!-- POST SETTINGS WRAP -->
+            <div class="post-settings-wrap">
+              <!-- POST SETTINGS -->
+              <div class="post-settings widget-box-post-settings-dropdown-trigger">
+                <!-- POST SETTINGS ICON -->
+                <svg class="post-settings-icon icon-more-dots">
+                  <use xlink:href="#svg-more-dots"></use>
+                </svg>
+                <!-- /POST SETTINGS ICON -->
+              </div>
+              <!-- /POST SETTINGS -->
+
+              <!-- SIMPLE DROPDOWN -->
+              <div class="simple-dropdown widget-box-post-settings-dropdown">
+                <!-- SIMPLE DROPDOWN LINK -->
+                <!-- <p class="simple-dropdown-link">Widget Settings</p> -->
+                <!-- /SIMPLE DROPDOWN LINK -->
+              </div>
+              <!-- /SIMPLE DROPDOWN -->
+            </div>
+            <!-- /POST SETTINGS WRAP -->
+          </div>
+          <!-- /WIDGET BOX SETTINGS -->
+
+          <!-- WIDGET BOX TITLE -->
+          <p class="widget-box-title">Suggested Users</p>
+          <!-- /WIDGET BOX TITLE -->
+
+          <!-- WIDGET BOX CONTENT -->
+          <div class="widget-box-content">
+            <!-- FILTERS -->
+            <div class="filters">
+              <!-- FILTER -->
+              <!-- <p class="filter">Newest</p> -->
+              <!-- /FILTER -->
+
+              <!-- FILTER -->
+              <p class="filter active">Popular</p>
+              <!-- /FILTER -->
+
+              <!-- FILTER -->
+              <!-- <p class="filter">Active</p> -->
+              <!-- /FILTER -->
+            </div>
+            <!-- /FILTERS -->
+
+            <!-- USER STATUS LIST -->
+            <div class="user-status-list">
+              <!-- USER STATUS -->
+              {% for user in all_users %}
+              <div class="user-status request-small">
+                <!-- USER STATUS AVATAR -->
+                <a class="user-status-avatar" href="profile-timeline.html">
+                  <!-- USER AVATAR -->
+                  <div class="user-avatar small no-outline">
+                    <!-- USER AVATAR CONTENT -->
+                    <div class="user-avatar-content">
+                      <!-- HEXAGON -->
+                      <div class="hexagon-image-30-32" data-src="{{user.profile_image}}"></div>
+                      <!-- /HEXAGON -->
+                    </div>
+                    <!-- /USER AVATAR CONTENT -->
+                
+                    <!-- USER AVATAR PROGRESS -->
+                    <div class="user-avatar-progress">
+                      <!-- HEXAGON -->
+                      <div class="hexagon-progress-40-44"></div>
+                      <!-- /HEXAGON -->
+                    </div>
+                    <!-- /USER AVATAR PROGRESS -->
+                
+                    <!-- USER AVATAR PROGRESS BORDER -->
+                    <div class="user-avatar-progress-border">
+                      <!-- HEXAGON -->
+                      <div class="hexagon-border-40-44"></div>
+                      <!-- /HEXAGON -->
+                    </div>
+                    <!-- /USER AVATAR PROGRESS BORDER -->
+                
+                    <!-- USER AVATAR BADGE -->
+                    <div class="user-avatar-badge">
+                      <!-- USER AVATAR BADGE BORDER -->
+                      <div class="user-avatar-badge-border">
+                        <!-- HEXAGON -->
+                        <div class="hexagon-22-24"></div>
+                        <!-- /HEXAGON -->
+                      </div>
+                      <!-- /USER AVATAR BADGE BORDER -->
+                
+                      <!-- USER AVATAR BADGE CONTENT -->
+                      <div class="user-avatar-badge-content">
+                        <!-- HEXAGON -->
+                        <div class="hexagon-dark-16-18"></div>
+                        <!-- /HEXAGON -->
+                      </div>
+                      <!-- /USER AVATAR BADGE CONTENT -->
+                
+                      <!-- USER AVATAR BADGE TEXT -->
+                      <p class="user-avatar-badge-text">26</p>
+                      <!-- /USER AVATAR BADGE TEXT -->
+                    </div>
+                    <!-- /USER AVATAR BADGE -->
+                  </div>
+                  <!-- /USER AVATAR -->
+                </a>
+                <!-- /USER STATUS AVATAR -->
+            
+                <!-- USER STATUS TITLE -->
+                <p class="user-status-title"><a class="bold" href="profile-timeline.html">{{request.user.first_name}} {{request.user.last_name}}</a></p>
+                <!-- /USER STATUS TITLE -->
+            
+                <!-- USER STATUS TEXT -->
+                <p class="user-status-text small">24.5K profile views</p>
+                <!-- /USER STATUS TEXT -->
+            
+                <!-- ACTION REQUEST LIST -->
+                <div class="action-request-list">
+                  <!-- ACTION REQUEST -->
+                  <div class="action-request accept">
+                    <!-- ACTION REQUEST ICON -->
+                    <svg class="action-request-icon icon-add-friend">
+                      <use xlink:href="#svg-add-friend"></use>
+                    </svg>
+                    <!-- /ACTION REQUEST ICON -->
+                  </div>
+                  <!-- /ACTION REQUEST -->
+                </div>
+                <!-- ACTION REQUEST LIST -->
+              </div>
+              {% endfor %}
+              <!-- /USER STATUS -->
+
+            </div>
+            <!-- /USER STATUS LIST -->
+          </div>
+          <!-- WIDGET BOX CONTENT -->
+        </div>
+        <!-- /WIDGET BOX -->
+        <!-- /suggested users -->
+        </div>
+        <!-- ending of div for suggested users -->
+
+        <!-- starting of div for posts -->
+        <div class="col">
+          <!-- SIMPLE TAB ITEMS -->
+        <div class="simple-tab-items">
+          <!-- FORM -->
+          <form class="form">
+            <!-- FORM SELECT -->
+            <div class="form-select">
+              <select id="newsfeed-filter-category" name="newsfeed_filter_category">
+                <option value="0">All Updates</option>
+                <option value="1">Mentions</option>
+                <option value="2">Friends</option>
+                <option value="3">Groups</option>
+                <option value="4">Blog Posts</option>
+              </select>
+              <!-- FORM SELECT ICON -->
+              <svg class="form-select-icon icon-small-arrow">
+                <use xlink:href="#svg-small-arrow"></use>
+              </svg>
+              <!-- /FORM SELECT ICON -->
+            </div>
+            <!-- /FORM SELECT -->
+          </form>
+          <!-- /FORM -->
+          
+
+          <!-- SIMPLE TAB ITEM -->
+          <p class="simple-tab-item active">All Updates</p>
+          <!-- /SIMPLE TAB ITEM -->
+
+          <!-- SIMPLE TAB ITEM -->
+          <p class="simple-tab-item">Mentions</p>
+          <!-- /SIMPLE TAB ITEM -->
+
+          <!-- SIMPLE TAB ITEM -->
+          <p class="simple-tab-item">Friends</p>
+          <!-- /SIMPLE TAB ITEM -->
+
+          <!-- SIMPLE TAB ITEM -->
+          <p class="simple-tab-item">Groups</p>
+          <!-- /SIMPLE TAB ITEM -->
+
+          <!-- SIMPLE TAB ITEM -->
+          <p class="simple-tab-item">Blog Posts</p>
+          <!-- /SIMPLE TAB ITEM -->
+        </div>
+        <!-- /SIMPLE TAB ITEMS -->
+        <!-- WIDGET BOX -->
+        <div class="widget-box no-padding post_width">
+          <!-- WIDGET BOX SETTINGS -->
+          {% for post in posts %}
+          <div class="widget-box-settings">
+            <!-- POST SETTINGS WRAP -->
+            <div class="post-settings-wrap">
+              <!-- POST SETTINGS -->
+              <div class="post-settings widget-box-post-settings-dropdown-trigger">
+                <!-- POST SETTINGS ICON -->
+                <svg class="post-settings-icon icon-more-dots">
+                  <use xlink:href="#svg-more-dots"></use>
+                </svg>
+                <!-- /POST SETTINGS ICON -->
+              </div>
+              <!-- /POST SETTINGS -->
+
+              <!-- SIMPLE DROPDOWN -->
+              <div class="simple-dropdown widget-box-post-settings-dropdown">
+                <!-- SIMPLE DROPDOWN LINK -->
+                <p class="simple-dropdown-link">Edit Post</p>
+                <!-- /SIMPLE DROPDOWN LINK -->
+
+                <!-- SIMPLE DROPDOWN LINK -->
+                <p class="simple-dropdown-link">Delete Post</p>
+                <!-- /SIMPLE DROPDOWN LINK -->
+
+                <!-- SIMPLE DROPDOWN LINK -->
+                <p class="simple-dropdown-link">Make it Featured</p>
+                <!-- /SIMPLE DROPDOWN LINK -->
+
+                <!-- SIMPLE DROPDOWN LINK -->
+                <p class="simple-dropdown-link">Report Post</p>
+                <!-- /SIMPLE DROPDOWN LINK -->
+
+                <!-- SIMPLE DROPDOWN LINK -->
+                <p class="simple-dropdown-link">Report Author</p>
+                <!-- /SIMPLE DROPDOWN LINK -->
+              </div>
+              <!-- /SIMPLE DROPDOWN -->
+            </div>
+            <!-- /POST SETTINGS WRAP -->
+          </div>
+          <!-- /WIDGET BOX SETTINGS -->
+          
+          <!-- WIDGET BOX STATUS -->
+          <div class="widget-box-status">
+            <!-- WIDGET BOX STATUS CONTENT -->
+            <div class="widget-box-status-content">
+              <!-- USER STATUS -->
+              <div class="user-status">
+                <!-- USER STATUS AVATAR -->
+                <a class="user-status-avatar" href="profile-timeline.html">
+                  <!-- USER AVATAR -->
+                  <div class="user-avatar small no-outline">
+                    <!-- USER AVATAR CONTENT -->
+                    <div class="user-avatar-content">
+                      <!-- HEXAGON -->
+                      <div class="hexagon-image-30-32" data-src="{{post.profile_image}}"></div>
+                      <!-- /HEXAGON -->
+                    </div>
+                    <!-- /USER AVATAR CONTENT -->
+                
+                    <!-- USER AVATAR PROGRESS -->
+                    <div class="user-avatar-progress">
+                      <!-- HEXAGON -->
+                      <div class="hexagon-progress-40-44"></div>
+                      <!-- /HEXAGON -->
+                    </div>
+                    <!-- /USER AVATAR PROGRESS -->
+                
+                    <!-- USER AVATAR PROGRESS BORDER -->
+                    <div class="user-avatar-progress-border">
+                      <!-- HEXAGON -->
+                      <div class="hexagon-border-40-44"></div>
+                      <!-- /HEXAGON -->
+                    </div>
+                    <!-- /USER AVATAR PROGRESS BORDER -->
+                
+                    <!-- USER AVATAR BADGE -->
+                    <div class="user-avatar-badge">
+                      <!-- USER AVATAR BADGE BORDER -->
+                      <div class="user-avatar-badge-border">
+                        <!-- HEXAGON -->
+                        <div class="hexagon-22-24"></div>
+                        <!-- /HEXAGON -->
+                      </div>
+                      <!-- /USER AVATAR BADGE BORDER -->
+                
+                      <!-- USER AVATAR BADGE CONTENT -->
+                      <div class="user-avatar-badge-content">
+                        <!-- HEXAGON -->
+                        <div class="hexagon-dark-16-18"></div>
+                        <!-- /HEXAGON -->
+                      </div>
+                      <!-- /USER AVATAR BADGE CONTENT -->
+                
+                      <!-- USER AVATAR BADGE TEXT -->
+                      <p class="user-avatar-badge-text">12</p>
+                      <!-- /USER AVATAR BADGE TEXT -->
+                    </div>
+                    <!-- /USER AVATAR BADGE -->
+                  </div>
+                  <!-- /USER AVATAR -->
+                </a>
+                <!-- /USER STATUS AVATAR -->
+            
+                <!-- USER STATUS TITLE -->
+                <p class="user-status-title medium"><a class="bold" href="profile-timeline.html">{{post.first_name}} {{post.last_name}}</a> uploaded a <span class="bold">video</span></p>
+                <!-- /USER STATUS TITLE -->
+            
+                <!-- USER STATUS TEXT -->
+                <p class="user-status-text small">2 minutes ago</p>
+                <!-- /USER STATUS TEXT -->
+              </div>
+              <!-- /USER STATUS -->
+
+              <!-- WIDGET BOX STATUS TEXT -->
+              <p class="widget-box-status-text"><a target="_blank" href="">{{post.user_posts}}</a>.</p>
+              <!-- /WIDGET BOX STATUS TEXT -->
+            </div>
+            <!-- /WIDGET BOX STATUS CONTENT -->
+
+            <!-- IFRAME WRAP -->
+            <div class="iframe-wrap">
+              <iframe src="https://www.youtube.com/embed/rk-wIgg9fNk" allowfullscreen></iframe>
+            </div>
+            <!-- /IFRAME WRAP -->
+
+            <!-- WIDGET BOX STATUS CONTENT -->
+            <div class="widget-box-status-content">
+              <!-- TAG LIST -->
+              <div class="tag-list">
+                <!-- TAG ITEM -->
+                <a class="tag-item secondary" href="newsfeed.html">Stream</a>
+                <!-- /TAG ITEM -->
+
+                <!-- TAG ITEM -->
+                <a class="tag-item secondary" href="newsfeed.html">StrikerGO</a>
+                <!-- /TAG ITEM -->
+
+                <!-- TAG ITEM -->
+                <a class="tag-item secondary" href="newsfeed.html">Outlaws</a>
+                <!-- /TAG ITEM -->
+
+                <!-- TAG ITEM -->
+                <a class="tag-item secondary" href="newsfeed.html">Gaming</a>
+                <!-- /TAG ITEM -->
+              </div>
+              <!-- /TAG LIST -->
+
+              <!-- CONTENT ACTIONS -->
+              <div class="content-actions">
+                <!-- CONTENT ACTION -->
+                <div class="content-action">
+                  <!-- META LINE -->
+                  <div class="meta-line">
+                    <!-- META LINE LIST -->
+                    <div class="meta-line-list reaction-item-list">
+                      <!-- REACTION ITEM -->
+                      <div class="reaction-item">
+                        <!-- REACTION IMAGE -->
+                        <img class="reaction-image reaction-item-dropdown-trigger" src="{% static 'img/reaction/love.png' %}" alt="reaction-love">
+                        <!-- /REACTION IMAGE -->
+            
+                        <!-- SIMPLE DROPDOWN -->
+                        <div class="simple-dropdown padded reaction-item-dropdown">
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text"><img class="reaction" src="{% static 'img/reaction/love.png' %}" alt="reaction-love"> <span class="bold">Love</span></p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+                        
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text">Matt Parker</p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text">Destroy Dex</p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text">The Green Goo</p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+                        </div>
+                        <!-- /SIMPLE DROPDOWN -->
+                      </div>
+                      <!-- /REACTION ITEM -->
+
+                      <!-- REACTION ITEM -->
+                      <div class="reaction-item">
+                        <!-- REACTION IMAGE -->
+                        <img class="reaction-image reaction-item-dropdown-trigger" src="{% static 'img/reaction/happy.png' %}" alt="reaction-happy">
+                        <!-- /REACTION IMAGE -->
+            
+                        <!-- SIMPLE DROPDOWN -->
+                        <div class="simple-dropdown padded reaction-item-dropdown">
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text"><img class="reaction" src="{% static 'img/reaction/happy.png' %}" alt="reaction-happy"> <span class="bold">Happy</span></p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+                        
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text">Sandra Strange</p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text">Jane Rodgers</p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+                        </div>
+                        <!-- /SIMPLE DROPDOWN -->
+                      </div>
+                      <!-- /REACTION ITEM -->
+
+                      <!-- REACTION ITEM -->
+                      <div class="reaction-item">
+                        <!-- REACTION IMAGE -->
+                        <img class="reaction-image reaction-item-dropdown-trigger" src="{% static 'img/reaction/like.png' %}" alt="reaction-like">
+                        <!-- /REACTION IMAGE -->
+            
+                        <!-- SIMPLE DROPDOWN -->
+                        <div class="simple-dropdown padded reaction-item-dropdown">
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text"><img class="reaction" src="{% static 'img/reaction/like.png' %}" alt="reaction-like"> <span class="bold">Like</span></p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+                        
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text">Neko Bebop</p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text">Nick Grissom</p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text">Sarah Diamond</p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text">Jett Spiegel</p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text">Marcus Jhonson</p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+
+                          <!-- SIMPLE DROPDOWN TEXT -->
+                          <p class="simple-dropdown-text"><span class="bold">and 6 more...</span></p>
+                          <!-- /SIMPLE DROPDOWN TEXT -->
+                        </div>
+                        <!-- /SIMPLE DROPDOWN -->
+                      </div>
+                      <!-- /REACTION ITEM -->
+                    </div>
+                    <!-- /META LINE LIST -->
+            
+                    <!-- META LINE TEXT -->
+                    <p class="meta-line-text">16</p>
+                    <!-- /META LINE TEXT -->
+                  </div>
+                  <!-- /META LINE -->
+            
+                  <!-- META LINE -->
+                  <div class="meta-line">
+                    <!-- META LINE LIST -->
+                    <div class="meta-line-list user-avatar-list">
+                      <!-- USER AVATAR -->
+                      <div class="user-avatar micro no-stats">
+                        <!-- USER AVATAR BORDER -->
+                        <div class="user-avatar-border">
+                          <!-- HEXAGON -->
+                          <div class="hexagon-22-24"></div>
+                          <!-- /HEXAGON -->
+                        </div>
+                        <!-- /USER AVATAR BORDER -->
+                    
+                        <!-- USER AVATAR CONTENT -->
+                        <div class="user-avatar-content">
+                          <!-- HEXAGON -->
+                          <div class="hexagon-image-18-20" data-src="{% static 'img/avatar/07.jpg' %}"></div>
+                          <!-- /HEXAGON -->
+                        </div>
+                        <!-- /USER AVATAR CONTENT -->
+                      </div>
+                      <!-- /USER AVATAR -->
+            
+                      <!-- USER AVATAR -->
+                      <div class="user-avatar micro no-stats">
+                        <!-- USER AVATAR BORDER -->
+                        <div class="user-avatar-border">
+                          <!-- HEXAGON -->
+                          <div class="hexagon-22-24"></div>
+                          <!-- /HEXAGON -->
+                        </div>
+                        <!-- /USER AVATAR BORDER -->
+                    
+                        <!-- USER AVATAR CONTENT -->
+                        <div class="user-avatar-content">
+                          <!-- HEXAGON -->
+                          <div class="hexagon-image-18-20" data-src="{% static 'img/avatar/13.jpg' %}"></div>
+                          <!-- /HEXAGON -->
+                        </div>
+                        <!-- /USER AVATAR CONTENT -->
+                      </div>
+                      <!-- /USER AVATAR -->
+            
+                      <!-- USER AVATAR -->
+                      <div class="user-avatar micro no-stats">
+                        <!-- USER AVATAR BORDER -->
+                        <div class="user-avatar-border">
+                          <!-- HEXAGON -->
+                          <div class="hexagon-22-24"></div>
+                          <!-- /HEXAGON -->
+                        </div>
+                        <!-- /USER AVATAR BORDER -->
+                    
+                        <!-- USER AVATAR CONTENT -->
+                        <div class="user-avatar-content">
+                          <!-- HEXAGON -->
+                          <div class="hexagon-image-18-20" data-src="{% static 'img/avatar/22.jpg' %}"></div>
+                          <!-- /HEXAGON -->
+                        </div>
+                        <!-- /USER AVATAR CONTENT -->
+                      </div>
+                      <!-- /USER AVATAR -->
+            
+                      <!-- USER AVATAR -->
+                      <div class="user-avatar micro no-stats">
+                        <!-- USER AVATAR BORDER -->
+                        <div class="user-avatar-border">
+                          <!-- HEXAGON -->
+                          <div class="hexagon-22-24"></div>
+                          <!-- /HEXAGON -->
+                        </div>
+                        <!-- /USER AVATAR BORDER -->
+                    
+                        <!-- USER AVATAR CONTENT -->
+                        <div class="user-avatar-content">
+                          <!-- HEXAGON -->
+                          <div class="hexagon-image-18-20" data-src="{% static 'img/avatar/10.jpg' %}"></div>
+                          <!-- /HEXAGON -->
+                        </div>
+                        <!-- /USER AVATAR CONTENT -->
+                      </div>
+                      <!-- /USER AVATAR -->
+            
+                      <!-- USER AVATAR -->
+                      <div class="user-avatar micro no-stats">
+                        <!-- USER AVATAR BORDER -->
+                        <div class="user-avatar-border">
+                          <!-- HEXAGON -->
+                          <div class="hexagon-22-24"></div>
+                          <!-- /HEXAGON -->
+                        </div>
+                        <!-- /USER AVATAR BORDER -->
+                    
+                        <!-- USER AVATAR CONTENT -->
+                        <div class="user-avatar-content">
+                          <!-- HEXAGON -->
+                          <div class="hexagon-image-18-20" data-src="{% static 'img/avatar/08.jpg' %}"></div>
+                          <!-- /HEXAGON -->
+                        </div>
+                        <!-- /USER AVATAR CONTENT -->
+                      </div>
+                      <!-- /USER AVATAR -->
+                    </div>
+                    <!-- /META LINE LIST -->
+            
+                    <!-- META LINE TEXT -->
+                    <p class="meta-line-text">19 Participants</p>
+                    <!-- /META LINE TEXT -->
+                  </div>
+                  <!-- /META LINE -->
+                </div>
+                <!-- /CONTENT ACTION -->
+            
+                <!-- CONTENT ACTION -->
+                <div class="content-action">
+                  <!-- META LINE -->
+                  <div class="meta-line">
+                    <!-- META LINE LINK -->
+                    <p class="meta-line-link">2 Comments</p>
+                    <!-- /META LINE LINK -->
+                  </div>
+                  <!-- /META LINE -->
+            
+                  <!-- META LINE -->
+                  <div class="meta-line">
+                    <!-- META LINE TEXT -->
+                    <p class="meta-line-text">0 Shares</p>
+                    <!-- /META LINE TEXT -->
+                  </div>
+                  <!-- /META LINE -->
+                </div>
+                <!-- /CONTENT ACTION -->
+              </div>
+              <!-- /CONTENT ACTIONS -->
+            </div>
+            <!-- /WIDGET BOX STATUS CONTENT -->
+          </div>
+          <!-- /WIDGET BOX STATUS -->
+
+          <!-- POST OPTIONS -->
+          <div class="post-options post_width">
+            <!-- POST OPTION WRAP -->
+            <div class="post-option-wrap">
+              <!-- POST OPTION -->
+              <div class="post-option reaction-options-dropdown-trigger">
+                <!-- POST OPTION ICON -->
+                <svg class="post-option-icon icon-thumbs-up">
+                  <use xlink:href="#svg-thumbs-up"></use>
+                </svg>
+                <!-- /POST OPTION ICON -->
+
+                <!-- POST OPTION TEXT -->
+                <p class="post-option-text">React!</p>
+                <!-- /POST OPTION TEXT -->
+              </div>
+              <!-- /POST OPTION -->
+
+              <!-- REACTION OPTIONS -->
+              <div class="reaction-options reaction-options-dropdown">
+                <!-- REACTION OPTION -->
+                <div class="reaction-option text-tooltip-tft" data-title="Like">
+                  <!-- REACTION OPTION IMAGE -->
+                  <img class="reaction-option-image" src="{% static 'img/reaction/like.png' %}" alt="reaction-like">
+                  <!-- /REACTION OPTION IMAGE -->
+                </div>
+                <!-- /REACTION OPTION -->
+
+                <!-- REACTION OPTION -->
+                <div class="reaction-option text-tooltip-tft" data-title="Love">
+                  <!-- REACTION OPTION IMAGE -->
+                  <img class="reaction-option-image" src="{% static 'img/reaction/love.png' %}" alt="reaction-love">
+                  <!-- /REACTION OPTION IMAGE -->
+                </div>
+                <!-- /REACTION OPTION -->
+
+                <!-- REACTION OPTION -->
+                <div class="reaction-option text-tooltip-tft" data-title="Dislike">
+                  <!-- REACTION OPTION IMAGE -->
+                  <img class="reaction-option-image" src="{% static 'img/reaction/dislike.png' %}" alt="reaction-dislike">
+                  <!-- /REACTION OPTION IMAGE -->
+                </div>
+                <!-- /REACTION OPTION -->
+
+                <!-- REACTION OPTION -->
+                <div class="reaction-option text-tooltip-tft" data-title="Happy">
+                  <!-- REACTION OPTION IMAGE -->
+                  <img class="reaction-option-image" src="{% static 'img/reaction/happy.png' %}" alt="reaction-happy">
+                  <!-- /REACTION OPTION IMAGE -->
+                </div>
+                <!-- /REACTION OPTION -->
+
+                <!-- REACTION OPTION -->
+                <div class="reaction-option text-tooltip-tft" data-title="Funny">
+                  <!-- REACTION OPTION IMAGE -->
+                  <img class="reaction-option-image" src="{% static 'img/reaction/funny.png' %}" alt="reaction-funny">
+                  <!-- /REACTION OPTION IMAGE -->
+                </div>
+                <!-- /REACTION OPTION -->
+
+                <!-- REACTION OPTION -->
+                <div class="reaction-option text-tooltip-tft" data-title="Wow">
+                  <!-- REACTION OPTION IMAGE -->
+                  <img class="reaction-option-image" src="{% static 'img/reaction/wow.png' %}" alt="reaction-wow">
+                  <!-- /REACTION OPTION IMAGE -->
+                </div>
+                <!-- /REACTION OPTION -->
+
+                <!-- REACTION OPTION -->
+                <div class="reaction-option text-tooltip-tft" data-title="Angry">
+                  <!-- REACTION OPTION IMAGE -->
+                  <img class="reaction-option-image" src="{% static 'img/reaction/angry.png' %}" alt="reaction-angry">
+                  <!-- /REACTION OPTION IMAGE -->
+                </div>
+                <!-- /REACTION OPTION -->
+
+                <!-- REACTION OPTION -->
+                <div class="reaction-option text-tooltip-tft" data-title="Sad">
+                  <!-- REACTION OPTION IMAGE -->
+                  <img class="reaction-option-image" src="{% static 'img/reaction/sad.png' %}" alt="reaction-sad">
+                  <!-- /REACTION OPTION IMAGE -->
+                </div>
+                <!-- /REACTION OPTION -->
+              </div>
+              <!-- /REACTION OPTIONS -->
+            </div>
+            <!-- /POST OPTION WRAP -->
+
+            <!-- POST OPTION -->
+            <div class="post-option">
+              <!-- POST OPTION ICON -->
+              <svg class="post-option-icon icon-comment">
+                <use xlink:href="#svg-comment"></use>
+              </svg>
+              <!-- /POST OPTION ICON -->
+
+              <!-- POST OPTION TEXT -->
+              <p class="post-option-text">Comment</p>
+              <!-- /POST OPTION TEXT -->
+            </div>
+            <!-- /POST OPTION -->
+
+            <!-- POST OPTION -->
+            <div class="post-option">
+              <!-- POST OPTION ICON -->
+              <svg class="post-option-icon icon-share">
+                <use xlink:href="#svg-share"></use>
+              </svg>
+              <!-- /POST OPTION ICON -->
+
+              <!-- POST OPTION TEXT -->
+              <p class="post-option-text">Share</p>
+              <!-- /POST OPTION TEXT -->
+            </div>
+            <!-- /POST OPTION -->
+          </div>
+          <!-- /POST OPTIONS -->
+          {% endfor %}
+        </div>
+        <!-- /WIDGET BOX -->
+        </div>
+        <!-- ending div for posts -->
+        </div>
+        <!-- div for row -->
+
+        <!-- don't delete section above this -->
+
+       
+   
+
+<!-- app -->
+<script src="{% static 'js/utils/app.js' %}"></script>
+<!-- page loader -->
+<script src="{% static 'js/utils/page-loader.js' %}"></script>
+<!-- simplebar -->
+<script src="{% static 'js/vendor/simplebar.min.js' %}"></script>
+<!-- liquidify -->
+<script src="{% static 'js/utils/liquidify.js' %}"></script>
+<!-- XM_Plugins -->
+<script src="{% static 'js/vendor/xm_plugins.min.js' %}"></script>
+<!-- tiny-slider -->
+<script src="{% static 'js/vendor/tiny-slider.min.js' %}"></script>
+<!-- chartJS -->
+<script src="{% static 'js/vendor/Chart.bundle.min.js' %}"></script>
+<!-- global.hexagons -->
+<script src="{% static 'js/global/global.hexagons.js' %}"></script>
+<!-- global.tooltips -->
+<script src="{% static 'js/global/global.tooltips.js' %}"></script>
+<!-- global.popups -->
+<script src="{% static 'js/global/global.popups.js' %}"></script>
+<!-- header -->
+<script src="{% static 'js/header/header.js' %}"></script>
+<!-- sidebar -->
+<script src="{% static 'js/sidebar/sidebar.js' %}"></script>
+<!-- content -->
+<script src="{% static 'js/content/content.js' %}"></script>
+<!-- form.utils -->
+<script src="{% static 'js/form/form.utils.js' %}"></script>
+<!-- twitter widget -->
+<script src="{% static 'js/widget/twitter.js' %}"></script>
+<!-- SVG icons -->
+<script src="{% static 'js/utils/svg-loader.js' %}"></script>
+
+
+<script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
+<script>
+    var config = {
+    "apiKey": "AIzaSyCjmGc2ro69-g-VF195_19WV8FWgOhu82s",
+    "authDomain": "gainvest-neo.firebaseapp.com",
+    "databaseURL": "https://gainvest-neo-default-rtdb.firebaseio.com/",
+    "storageBucket": "gainvest-neo.appspot.com",
+    "messagingSenderId": "351600450694",
+  };
+
+
+  
+  firebase.initializeApp(config);
+
+  // Get a reference to the storage service, which is used to create references in your storage bucket
+
+  function uploadimage(){
+  var storage = firebase.storage();
+
+  var file = document.getElementById("files").files[0];
+
+  var storageRef = storage.ref();
+
+  var thisref = storageRef.child(file.name).put(file);
+
+  thisref.on('state_changed',function(snapshot){
+
+  console.log("file uploaded succesfully");
+
+  },
+  function(error) {
+
+  },
+
+  function() {
+  // Upload completed successfully, now we can get the download URL
+  var downloadURL = thisref.snapshot.downloadURL;
+  console.log("got url");
+  document.getElementById("url").value = downloadURL;
+  alert("file uploaded successfully");
+});
+
+
+
+
+
+
+    }
+
+
+</script>
+</body>
+</html>
