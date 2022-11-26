@@ -73,8 +73,8 @@ def userPostDetailAPI(request, pk):
         post_obj = Post.objects.get(id=pk)
         post_comments = PostComment.objects.filter(post= post_obj)
         # for comment in post_comments:
-        # serializer = UserPostDetailSerializer(post_obj, many=False, context = {'request':request})
-        serializer = UserPostCommentsListSerializer(post_comments,many=True, context = {'request':request})
+        serializer = UserPostDetailSerializer(post_obj, many=False, context = {'request':request})
+        # serializer = UserPostCommentsListSerializer(post_comments,many=True, context = {'request':request})
         return Response(serializer.data)
     except Post.DoesNotExist:
         raise Http404
