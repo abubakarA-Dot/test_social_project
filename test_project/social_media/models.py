@@ -24,7 +24,7 @@ class PostComment(models.Model):
     comment_body = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    comment_reply = models.ForeignKey('self', on_delete=models.CASCADE)
+    comment_reply = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return str(self.comment_body)
